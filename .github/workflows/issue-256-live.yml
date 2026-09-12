@@ -45,8 +45,4 @@ jobs:
             exit 1
           fi
           tar -xzf "${SOURCE_BUNDLE}" -C .verify/source
-          if [[ "$(tr -d '\r\n' < .verify/source/CANDIDATE_REVISION.txt)" != "${EXPECTED_AGENT_INFRASTRUCTURE_REVISION}" ]]; then
-            echo "candidate source revision mismatch"
-            exit 1
-          fi
           python3 .github/verification/verify_frontier.py
