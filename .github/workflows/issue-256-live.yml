@@ -1,0 +1,53 @@
+name: issue-256 live frontier verification
+
+on:
+  workflow_dispatch:
+
+# Unspecified permissions remain none.
+permissions: {}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      issues: read
+      metadata: read
+      pull-requests: read
+    env:
+      EPHEMERAL_JOB_TOKEN: \${{ github.token }}
+      EXPECTED_SOURCE_BUNDLE_SHA256: 01238a6f0b9d2770494226bf149a94ce3053d15914c279331e29d06c1aae2eaf
+      EXPECTED_AGENT_INFRASTRUCTURE_REVISION: ea3c780741c5e2e70470f5389d130a4495517464
+      SOURCE_BUNDLE: .github/verification/agent-infrastructure-source.tar.gz
+      VERIFICATION_WORKSPACE: .verify
+    steps:
+      - name: Checkout disposable verification inputs
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify candidate binding and run production replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "\${GH_TOKEN:-}" || -n "\${GITHUB_TOKEN:-}" ]]; then
+            echo "broad token environment is present; refusing to run"
+            exit 1
+          fi
+          if [[ -z "\${EPHEMERAL_JOB_TOKEN:-}" || "\${GITHUB_ACTIONS:-}" != "true" || "\${GITHUB_REPOSITORY:-}" != "JoeTong-95/TEMP" || -z "\${GITHUB_RUN_ID:-}" ]]; then
+            echo "explicit ephemeral GitHub Actions boundary is missing"
+            exit 1
+          fi
+          mkdir -p .verify/source
+          actual_bundle_sha256="\$(sha256sum "\${SOURCE_BUNDLE}" | awk '{print \$1}')"
+          if [[ "\${actual_bundle_sha256}" != "\${EXPECTED_SOURCE_BUNDLE_SHA256}" ]]; then
+            echo "candidate source bundle digest mismatch"
+            exit 1
+          fi
+          tar -xzf "\${SOURCE_BUNDLE}" -C .verify/source
+          if [[ "\$(tr -d '\r\n' < .verify/source/CANDIDATE_REVISION.txt)" != "\${EXPECTED_AGENT_INFRASTRUCTURE_REVISION}" ]]; then
+            echo "candidate source revision mismatch"
+            exit 1
+          fi
+          python3 .github/verification/verify_frontier.py
