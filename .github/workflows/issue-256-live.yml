@@ -16,7 +16,7 @@ jobs:
       metadata: read
       pull-requests: read
     env:
-      EPHEMERAL_JOB_TOKEN: \${{ github.token }}
+      EPHEMERAL_JOB_TOKEN: ${{ github.token }}
       EXPECTED_SOURCE_BUNDLE_SHA256: 01238a6f0b9d2770494226bf149a94ce3053d15914c279331e29d06c1aae2eaf
       EXPECTED_AGENT_INFRASTRUCTURE_REVISION: ea3c780741c5e2e70470f5389d130a4495517464
       SOURCE_BUNDLE: .github/verification/agent-infrastructure-source.tar.gz
