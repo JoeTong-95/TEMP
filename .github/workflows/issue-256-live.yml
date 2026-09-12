@@ -31,22 +31,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -n "\${GH_TOKEN:-}" || -n "\${GITHUB_TOKEN:-}" ]]; then
+          if [[ -n "${GH_TOKEN:-}" || -n "${GITHUB_TOKEN:-}" ]]; then
             echo "broad token environment is present; refusing to run"
             exit 1
           fi
-          if [[ -z "\${EPHEMERAL_JOB_TOKEN:-}" || "\${GITHUB_ACTIONS:-}" != "true" || "\${GITHUB_REPOSITORY:-}" != "JoeTong-95/TEMP" || -z "\${GITHUB_RUN_ID:-}" ]]; then
+          if [[ -z "${EPHEMERAL_JOB_TOKEN:-}" || "${GITHUB_ACTIONS:-}" != "true" || "${GITHUB_REPOSITORY:-}" != "JoeTong-95/TEMP" || -z "${GITHUB_RUN_ID:-}" ]]; then
             echo "explicit ephemeral GitHub Actions boundary is missing"
             exit 1
           fi
           mkdir -p .verify/source
-          actual_bundle_sha256="\$(sha256sum "\${SOURCE_BUNDLE}" | awk '{print \$1}')"
-          if [[ "\${actual_bundle_sha256}" != "\${EXPECTED_SOURCE_BUNDLE_SHA256}" ]]; then
+          actual_bundle_sha256="$(sha256sum "${SOURCE_BUNDLE}" | awk '{print $1}')"
+          if [[ "${actual_bundle_sha256}" != "${EXPECTED_SOURCE_BUNDLE_SHA256}" ]]; then
             echo "candidate source bundle digest mismatch"
             exit 1
           fi
-          tar -xzf "\${SOURCE_BUNDLE}" -C .verify/source
-          if [[ "\$(tr -d '\r\n' < .verify/source/CANDIDATE_REVISION.txt)" != "\${EXPECTED_AGENT_INFRASTRUCTURE_REVISION}" ]]; then
+          tar -xzf "${SOURCE_BUNDLE}" -C .verify/source
+          if [[ "$(tr -d '\r\n' < .verify/source/CANDIDATE_REVISION.txt)" != "${EXPECTED_AGENT_INFRASTRUCTURE_REVISION}" ]]; then
             echo "candidate source revision mismatch"
             exit 1
           fi
