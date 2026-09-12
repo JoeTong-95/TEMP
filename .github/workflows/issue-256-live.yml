@@ -13,7 +13,6 @@ jobs:
       actions: read
       contents: read
       issues: read
-      metadata: read
       pull-requests: read
     env:
       EPHEMERAL_JOB_TOKEN: ${{ github.token }}
