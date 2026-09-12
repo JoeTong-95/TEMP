@@ -29,7 +29,7 @@ JOB_PERMISSIONS = {
     "actions": "read",
     "contents": "read",
     "issues": "read",
-    "metadata": "read",
+
     "pull-requests": "read",
 }
 REAL_HTTPS_CONNECTION = http.client.HTTPSConnection
@@ -621,3 +621,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
