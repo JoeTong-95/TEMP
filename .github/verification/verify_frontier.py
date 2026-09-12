@@ -208,7 +208,7 @@ def prepare_project(project_db: Path) -> Any:
         project_db, validate_configuration=lambda _project, _payload: True
     )
     payload = {
-        "prd_reference": REPOSITORY_URL + "/issues/1",
+        "prd_reference": "projects/issue-256-live-frontier/prd.md",
         "agents": [
             {
                 "id": "frontier-verifier",
@@ -621,4 +621,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
