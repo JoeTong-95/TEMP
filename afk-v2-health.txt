@@ -1,1 +1,1 @@
-AFK v2 end-to-end path healthy.
+AFK v2 end-to-end path healthy
