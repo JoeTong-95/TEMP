@@ -1,4 +1,5 @@
 import unittest
+import calculator
 from calculator import add
 
 
@@ -7,6 +8,9 @@ class CalculatorTests(unittest.TestCase):
         self.assertEqual(add(2, 3), 5)
         self.assertEqual(add(-2, 3), 1)
         self.assertEqual(add(0.5, 0.25), 0.75)
+
+    def test_multiply_three_by_four_returns_twelve(self):
+        self.assertEqual(calculator.multiply(3, 4), 12)
 
 
 if __name__ == "__main__":
